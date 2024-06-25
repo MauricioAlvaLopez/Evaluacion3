@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automotora Mabri</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+        .logo {
+            width: 90%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .title {
+            text-decoration: underline;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .registro-table, .registro-list {
+            max-width: 600px;
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #5f6768;
+            border: 2px solid #000;
+            margin: 0 auto;
+            color: #fff;
+        }
+        .registro-table td, .registro-list th, .registro-list td {
+            padding: 10px;
+            text-align: center;
+        }
+        .registro-list th, .registro-list td {
+            border: 1px solid #000;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+        }
+        header h1 {
+            margin: 0;
+            text-align: center;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .section {
+            padding: 50px 0;
+            text-align: center;
+        }
+        .vehicle {
+            background-color: #cce7ff;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .vehicle img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .specs {
+            display: none;
+            margin-left: 20px;
+            align-self: center;
+        }
+        .specs.visible {
+            display: block;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        var editingRow = null;
+
+        function toggleSpecs(id) {
+            var specs = document.getElementById(id);
+            if (specs.classList.contains('visible')) {
+                specs.classList.remove('visible');
+            } else {
+                specs.classList.add('visible');
+            }
+        }
+
+        function openModal() {
+            document.getElementById("myModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none";
+            document.getElementById("registroForm").reset();
+            editingRow = null;
+        }
+
+        function saveData(event) {
+            event.preventDefault();
+
+            var nombre = document.getElementById("nombre").value;
+            var apellido = document.getElementById("apellido").value;
+            var email = document.getElementById("email").value;
+            var telefono = document.getElementById("telefono").value;
+
+            if (editingRow) {
+                editingRow.cells[0].innerHTML = nombre;
+                editingRow.cells[1].innerHTML = apellido;
+                editingRow.cells[2].innerHTML = email;
+                editingRow.cells[3].innerHTML = telefono;
+                editingRow = null;
+            } else {
+                var table = document.getElementById("registroList").getElementsByTagName('tbody')[0];
+                var row = table.insertRow();
+
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+
+                cell1.innerHTML = nombre;
+                cell2.innerHTML = apellido;
+                cell3.innerHTML = email;
+                cell4.innerHTML = telefono;
+                cell5.innerHTML = '<button class="btn" onclick="editRow(this)">Editar</button> <button class="btn" onclick="deleteRow(this)">Eliminar</button>';
+            }
+
+            document.getElementById("registroForm").reset();
+            closeModal();
+        }
+
+        function deleteRow(button) {
+            var row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        function editRow(button) {
+            var row = button.parentNode.parentNode;
+            editingRow = row;
+
+            document.getElementById("nombre").value = row.cells[0].innerHTML;
+            document.getElementById("apellido").value = row.cells[1].innerHTML;
+            document.getElementById("email").value = row.cells[2].innerHTML;
+            document.getElementById("telefono").value = row.cells[3].innerHTML;
+
+            openModal();
+        }
+
+        window.onclick = function(event) {
+            var modal = document.getElementById("myModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <img src="https://cdn.pixabay.com/photo/2021/09/20/23/02/car-6642023_640.jpg" alt="Logo de Automotora Mabri" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="#quienes-somos">Quiénes somos</a></li>
+                    <li><a href="#registro" onclick="openModal()">Registro</a></li>
+                    <li><a href="#vehiculos">Vehículos</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="quienes-somos" class="section">
+        <div class="container">
+            <h1 class="title">Automotora Mabri</h1>
+            <h2>Quiénes somos</h2>
+            <p>Somos una automotora dedicada a ofrecer una amplia variedad de vehículos nuevos y usados.
+                Hasta el momento no tenemos gran variedad de vehículos pero empezamos con muy buenas naves. 
+            </p>
+        </div>
+    </section>
+
+    <section id="vehiculos" class="section">
+        <div class="container">
+            <h2>Vehículos</h2>
+            <div class="vehicle">
+                <img src="https://hips.hearstapps.com/hmg-prod/images/ford-mustang-2024-1-1663227658.jpg" alt="Auto 1">
+                <div>
+                    <h3>Ford Mustang</h3>
+                    <p>Año: 2024</p>
+                    <p>Precio: $120,000</p>
+                    <button class="btn" onclick="toggleSpecs('specs1')">Ver especificaciones</button>
+                    <div id="specs1" class="specs">
+                        <p>Motor: 5.0L V8</p>
+                        <p>Potencia: 450 HP</p>
+                        <p>Transmisión: Manual de 6 velocidades</p>
+                    </div>
+                </div>
+            </div>
+            <div class="vehicle">
+                <img src="https://www.diariomotor.com/imagenes/2022/10/audi-r8-v10-gt-rwd-2023-104-633c05c160511.jpg" alt="Auto 2">
+                <div>
+                    <h3>Audi R8</h3>
+                    <p>Año: 2024</p>
+                    <p>Precio: $135,000</p>
+                    <button class="btn" onclick="toggleSpecs('specs2')">Ver especificaciones</button>
+                    <div id="specs2" class="specs">
+                        <p>Motor: 5.2L V10</p>
+                        <p>Potencia: 620 HP</p>
+                        <p>Transmisión: Automática de 7 velocidades</p>
+                    </div>
+                </div>
+            </div>
+            <div class="vehicle">
+                <img src="https://acnews.blob.core.windows.net/imgnews/large/NAZ_cebcc49c3110490390d4ded056181839.webp" alt="Auto 3">
+                <div>
+                    <h3>Nissan GTR</h3>
+                    <p>Año: 2024</p>
+                    <p>Precio: $120,000</p>
+                    <button class="btn" onclick="toggleSpecs('specs3')">Ver especificaciones</button>
+                    <div id="specs3" class="specs">
+                        <p>Motor: 3.8L V6 Twin-Turbo</p>
+                        <p>Potencia: 565 HP</p>
+                        <p>Transmisión: Automática de 6 velocidades</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacto" class="section">
+        <div class="container">
+            <h2>Contacto</h2>
+            <p>¡Contáctanos para obtener más información sobre nuestros vehículos!</p>
+            <ul>
+                <li>Teléfono: 9 3396 7525</li>
+                <li>Email: pruebaMauri@automotoramabri.com</li>
+                <li>Instagram: 3l_wn_del_b13</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Automotora Mabri. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Registro</h2>
+            <form id="registroForm" onsubmit="saveData(event)">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required><br><br>
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" required><br><br>
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" required><br><br>
+                <label for="telefono">Número de teléfono:</label>
+                <input type="tel" id="telefono" name="telefono" required><br><br>
+                <button type="submit" class="btn">Registrarse</button>
+            </form>
+            <h3>Registros</h3>
+            <table id="registroList" class="registro-list">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los registros se insertarán aquí -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
